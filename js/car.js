@@ -1,7 +1,7 @@
-import * as THREE from "./js/three";
+import * as THREE from './three.js';
 
 const scene = new THREE.Scene();
-
+console.log('hello')
 const ambientLight = new THREE.AmbientLight(0xffffff,0.6);
 scene.add(ambientLight);
 
@@ -26,3 +26,10 @@ const camera = new THREE.OrthographicCamera(
 
 camera.position.set(200, 200, 200);
 camera.lookAt(0, 10, 0);
+
+// setting up the renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.render(scene, camera);
+
+document.body.appendChild(renderer.domElement);
