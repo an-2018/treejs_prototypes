@@ -33,7 +33,7 @@
             1000 // far plane
         );
 
-        camera.position.set(200, 200, 200);
+        camera.position.set(200, 200, -200);
         camera.lookAt(0, 10, 0);
 
         // setting up the renderer
@@ -67,16 +67,34 @@
 
             var main = new THREE.Mesh(
                 new THREE.BoxBufferGeometry(60, 15, 30),
-                new THREE.MeshLambertMaterial({color: 0x78b14b})
+                new THREE.MeshLambertMaterial({color: 0xff104b})
             );
 
             main.position.y = 12;
             car.add(main);
 
+            const carFrontTexture = getCarFrontTexture();
+            const carBackTexture = getCarFrontTexture();
+            const carRightTexture = getCarSideTexture();
+            const carLeftTexture = getCarSideTexture();
+
+            // mirror sides textures
+            carLeftTexture.center = new THREE.Vector2(0.5, 0.5);
+            carLeftTexture.rotation = Math.PI;
+            carLeftTexture.flipY = false;
+
             var cabin = new THREE.Mesh(
                 new THREE.BoxBufferGeometry(33, 12, 24),
-                new THREE.MeshLambertMaterial({color:0xffffff})
+                [
+                    new THREE.MeshLambertMaterial({map: carFrontTexture}),
+                    new THREE.MeshLambertMaterial({map: carBackTexture}),
+                    new THREE.MeshLambertMaterial({color: 0xffffff}),
+                    new THREE.MeshLambertMaterial({color: 0xffffff}),
+                    new THREE.MeshLambertMaterial({map: carRightTexture}),
+                    new THREE.MeshLambertMaterial({map: carLeftTexture})
+                ]
             );
+
 
             cabin.position.x = -6;
             cabin.position.y = 25.5;
@@ -90,6 +108,36 @@
 
         renderer.render(scene, camera);
 
+        function getCarFrontTexture() {
+            const canvas = document.createElement("canvas");
+            canvas.width = 64;
+            canvas.height = 32;
+            const context = canvas.getContext("2d");
+
+            context.fillStyle = "#ffffff";
+            context.fillRect(0, 0, 64, 32);
+
+            context.fillStyle = "#666666";
+            context.fillRect(8, 8, 48, 24);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function getCarSideTexture(){
+            const canvas = document.createElement("canvas");
+            canvas.width = 128;
+            canvas.height = 32;
+            const context = canvas.getContext("2d");
+
+            context.fillStyle = "#ffffff";
+            context.fillRect(0, 0, 128, 32);
+
+            context.fillStyle = "#666666";
+            context.fillRect(10, 8, 38, 24);
+            context.fillRect(58, 8, 60, 24);
+
+            return new THREE.CanvasTexture(canvas);
+        }
     </script>
 </body>
 </html>
